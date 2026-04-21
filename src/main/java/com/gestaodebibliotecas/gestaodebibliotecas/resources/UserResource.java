@@ -1,7 +1,6 @@
 package com.gestaodebibliotecas.gestaodebibliotecas.resources;
 
 import com.gestaodebibliotecas.gestaodebibliotecas.dto.UserDTO;
-import com.gestaodebibliotecas.gestaodebibliotecas.entities.User;
 import com.gestaodebibliotecas.gestaodebibliotecas.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         UserDTO savedUser = userService.saveUser(userDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -43,7 +42,7 @@ public class UserResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody @Valid UserDTO userDTO) {
         UserDTO updateUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok().body(updateUser);
     }

@@ -1,6 +1,5 @@
 package com.gestaodebibliotecas.gestaodebibliotecas.entities;
 
-import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;

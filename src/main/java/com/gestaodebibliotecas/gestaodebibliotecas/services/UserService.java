@@ -80,6 +80,9 @@ public class UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
+        if(existingUser.isDeleted()) {
+            throw new ResourceNotFoundException(USER_NOT_FOUND);
+        }
         existingUser.onDeleted();
 
         userRepository.save(existingUser);

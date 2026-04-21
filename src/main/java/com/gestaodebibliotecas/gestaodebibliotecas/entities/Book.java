@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "tb_books")
 public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -22,26 +21,18 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 2, max = 150)
     @Column(nullable = false, length = 150)
     private String title;
 
-    @NotBlank
-    @Size(min = 2, max = 150)
     @Column(nullable = false, length = 150)
     private String author;
 
-    @NotBlank
     @Column(nullable = false, unique = true, length = 13)
     private String isbn;
 
-    @NotBlank
-    @Size(min = 2, max = 100)
     @Column(nullable = false, length = 100)
     private String category;
 
-    @NotNull
     @Column(name = "publication_date",nullable = false)
     private LocalDate publicationDate;
 
@@ -58,4 +49,27 @@ public class Book implements Serializable {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void onDeleted () {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public Book(String title, String author, String isbn, String category, LocalDate publicationDate) {
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.category = category;
+        this.publicationDate = publicationDate;
+    }
 }
