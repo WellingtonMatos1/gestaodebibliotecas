@@ -1,5 +1,6 @@
 package com.gestaodebibliotecas.gestaodebibliotecas.entities;
 
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "tb_users")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -19,25 +19,19 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(nullable = false, length = 100)
-    @Size(min = 2, max = 100)
     private String name;
 
-    @NotBlank
-    @Email
-    @Size(max = 150)
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @NotBlank
     @Column(nullable = false)
     private String phone;
 
     @NotNull
     @PastOrPresent
     @Setter(AccessLevel.NONE)
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -50,8 +44,25 @@ public class User implements Serializable {
     private boolean isDeleted = false;
 
     @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.email = email != null ? email.toLowerCase() : null;
+    }
+
     @PreUpdate
-    private void prepareData(){
-        this.email = email == null ? null : email.toLowerCase();
+    private void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+        this.email = email != null ? email.toLowerCase() : null;
+    }
+
+    public void onDeleted () {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public User(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
     }
 }
