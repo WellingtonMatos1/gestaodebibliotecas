@@ -3,12 +3,13 @@ package com.gestaodebibliotecas.gestaodebibliotecas.services;
 import com.gestaodebibliotecas.gestaodebibliotecas.dto.BookDTO;
 import com.gestaodebibliotecas.gestaodebibliotecas.entities.Book;
 import com.gestaodebibliotecas.gestaodebibliotecas.exception.ResourceNotFoundException;
+import com.gestaodebibliotecas.gestaodebibliotecas.mappers.BookMapper;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class BookService {
@@ -18,11 +19,12 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public List<BookDTO> findAll() {
-        return bookRepository.findByIsDeletedFalse()
-                .stream()
-                .map(BookDTO::new)
-                .toList();
+    @Autowired
+    private BookMapper bookMapper;
+
+    public Page<BookDTO> findAll(Pageable pageable) {
+        return bookRepository.findByIsDeletedFalse(pageable)
+                .map(BookDTO::new);
     }
 
     public BookDTO findById(Long id) {
@@ -38,14 +40,8 @@ public class BookService {
 
     @Transactional
     public BookDTO saveBook (BookDTO bookDTO) {
-        Book entity = new Book();
-        entity.setTitle(bookDTO.getTitle());
-        entity.setAuthor(bookDTO.getAuthor());
-        entity.setIsbn(bookDTO.getIsbn());
-        entity.setCategory(bookDTO.getCategory());
-        entity.setPublicationDate(bookDTO.getPublicationDate());
-
-        return new BookDTO(bookRepository.save(entity));
+        Book entity = bookMapper.toEntity(bookDTO);
+        return bookMapper.toDTO(bookRepository.save(entity));
     }
 
     @Transactional
@@ -53,25 +49,8 @@ public class BookService {
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND));
 
-        if(existingBook.isDeleted()) {
-            throw new ResourceNotFoundException(BOOK_NOT_FOUND);
-        }
-        if(bookDTO.getTitle() != null) {
-            existingBook.setTitle(bookDTO.getTitle());
-        }
-        if(bookDTO.getAuthor() != null) {
-            existingBook.setAuthor(bookDTO.getAuthor());
-        }
-        if(bookDTO.getIsbn() != null) {
-            existingBook.setIsbn(bookDTO.getIsbn());
-        }
-        if(bookDTO.getCategory() != null) {
-            existingBook.setCategory(bookDTO.getCategory());
-        }
-        if(bookDTO.getPublicationDate() != null) {
-            existingBook.setPublicationDate(bookDTO.getPublicationDate());
-        }
-        return new BookDTO(bookRepository.save(existingBook));
+        bookMapper.updateEntityFromDto(bookDTO, existingBook);
+        return bookMapper.toDTO(bookRepository.save(existingBook));
     }
 
     @Transactional

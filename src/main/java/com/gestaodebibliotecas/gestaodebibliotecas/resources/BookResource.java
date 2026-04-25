@@ -4,6 +4,8 @@ import com.gestaodebibliotecas.gestaodebibliotecas.dto.BookDTO;
 import com.gestaodebibliotecas.gestaodebibliotecas.services.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,9 +21,8 @@ public class BookResource {
     private BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<BookDTO>> findAll() {
-        List<BookDTO> list = bookService.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<Page<BookDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
     @GetMapping(value = "/{id}")

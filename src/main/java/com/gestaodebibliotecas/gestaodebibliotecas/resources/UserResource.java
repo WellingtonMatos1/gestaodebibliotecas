@@ -4,6 +4,8 @@ import com.gestaodebibliotecas.gestaodebibliotecas.dto.UserDTO;
 import com.gestaodebibliotecas.gestaodebibliotecas.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,9 +21,8 @@ public class UserResource {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> findAll() {
-        List<UserDTO> list = userService.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(userService.findAll(pageable));
     }
 
     @GetMapping(value = "/{id}")
