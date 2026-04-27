@@ -26,13 +26,13 @@ public class BookResource {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<BookDTO> findById (@PathVariable Long id) {
+    public ResponseEntity<BookDTO> findById(@PathVariable Long id) {
         BookDTO obj = bookService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    public ResponseEntity<BookDTO> updateBook (@RequestBody @Valid BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> updateBook(@RequestBody @Valid BookDTO bookDTO) {
         BookDTO savedBook = bookService.saveBook(bookDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -43,13 +43,13 @@ public class BookResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<BookDTO> updateBook (@PathVariable Long id, @RequestBody @Valid BookDTO bookDTO){
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody @Valid BookDTO bookDTO){
         BookDTO updateBook = bookService.updateBook(id, bookDTO);
         return ResponseEntity.ok().body(updateBook);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteBook (@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }

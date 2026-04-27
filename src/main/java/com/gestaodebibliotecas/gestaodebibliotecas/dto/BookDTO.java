@@ -7,10 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class BookDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -34,8 +36,6 @@ public class BookDTO {
 
     @NotNull
     private LocalDate publicationDate;
-
-    public BookDTO () {}
 
     public BookDTO(Book entity) {
         this.id = entity.getId();

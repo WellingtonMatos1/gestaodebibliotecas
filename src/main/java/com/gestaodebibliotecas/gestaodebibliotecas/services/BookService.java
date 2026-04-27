@@ -29,23 +29,20 @@ public class BookService {
 
     public BookDTO findById(Long id) {
         Book entity = bookRepository.findById(id)
+                .filter(b -> !b.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND));
-
-        if(entity.isDeleted()) {
-            throw new ResourceNotFoundException(BOOK_NOT_FOUND);
-        }
 
         return new BookDTO(entity);
     }
 
     @Transactional
-    public BookDTO saveBook (BookDTO bookDTO) {
+    public BookDTO saveBook(BookDTO bookDTO) {
         Book entity = bookMapper.toEntity(bookDTO);
         return bookMapper.toDTO(bookRepository.save(entity));
     }
 
     @Transactional
-    public BookDTO updateBook (Long id, BookDTO bookDTO) {
+    public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND));
 
@@ -54,15 +51,12 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteBook (Long id) {
+    public void deleteBook(Long id) {
         Book existingBook = bookRepository.findById(id)
+                .filter(e -> !e.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND));
 
-        if(existingBook.isDeleted()) {
-            throw new ResourceNotFoundException(BOOK_NOT_FOUND);
-        }
         existingBook.onDeleted();
-
         bookRepository.save(existingBook);
     }
 }

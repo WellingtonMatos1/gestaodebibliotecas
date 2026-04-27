@@ -33,11 +33,8 @@ public class UserService {
 
     public UserDTO findById(Long id) {
         User entity = userRepository.findById(id)
+                .filter(u -> !u.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
-
-        if (entity.isDeleted()) {
-            throw new ResourceNotFoundException(USER_NOT_FOUND);
-        }
 
         return new UserDTO(entity);
     }
@@ -72,15 +69,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser (Long id) {
+    public void deleteUser(Long id) {
         User existingUser = userRepository.findById(id)
+                .filter(e -> !e.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
-        if(existingUser.isDeleted()) {
-            throw new ResourceNotFoundException(USER_NOT_FOUND);
-        }
         existingUser.onDeleted();
-
         userRepository.save(existingUser);
     }
 }

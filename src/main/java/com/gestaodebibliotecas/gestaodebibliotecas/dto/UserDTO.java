@@ -7,8 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class UserDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -26,8 +28,6 @@ public class UserDTO {
     @NotBlank
     @Pattern(regexp = "^\\+?[0-9]{8,15}$", message = "Invalid phone number")
     private String phone;
-
-    public UserDTO () {}
 
     public UserDTO(User entity) {
         this.id = entity.getId();
