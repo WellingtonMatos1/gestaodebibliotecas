@@ -56,7 +56,14 @@ public class Loan implements Serializable {
     }
 
     @PreUpdate
+    
     private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public Loan(User user, Book book, LocalDate returnDate) {
+        this.user = user;
+        this.book = book;
+        this.returnDate = returnDate;
     }
 }
