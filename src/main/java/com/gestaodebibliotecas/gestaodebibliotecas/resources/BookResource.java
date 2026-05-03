@@ -3,7 +3,7 @@ package com.gestaodebibliotecas.gestaodebibliotecas.resources;
 import com.gestaodebibliotecas.gestaodebibliotecas.dto.BookDTO;
 import com.gestaodebibliotecas.gestaodebibliotecas.services.BookService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/books")
 public class BookResource {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
     @GetMapping
     public ResponseEntity<Page<BookDTO>> findAll(Pageable pageable) {

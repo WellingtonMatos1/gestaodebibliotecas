@@ -8,25 +8,20 @@ import com.gestaodebibliotecas.gestaodebibliotecas.exception.ResourceNotFoundExc
 import com.gestaodebibliotecas.gestaodebibliotecas.mappers.UserMapper;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.LoanRepository;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private LoanRepository loanRepository;
-
-    @Autowired
-    private UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final LoanRepository loanRepository;
+    private final UserMapper userMapper;
 
     private static final String USER_NOT_FOUND = "User not found";
     private static final String EMAIL_ALREADY_REGISTERED = "Email already registered";

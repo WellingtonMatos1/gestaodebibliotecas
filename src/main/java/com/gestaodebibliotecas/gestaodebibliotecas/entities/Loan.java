@@ -56,7 +56,6 @@ public class Loan implements Serializable {
     }
 
     @PreUpdate
-    
     private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }

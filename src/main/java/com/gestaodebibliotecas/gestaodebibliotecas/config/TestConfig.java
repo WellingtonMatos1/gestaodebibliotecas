@@ -6,7 +6,7 @@ import com.gestaodebibliotecas.gestaodebibliotecas.entities.User;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.BookRepository;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.LoanRepository;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,18 +14,14 @@ import org.springframework.context.annotation.Profile;
 import java.time.LocalDate;
 import java.util.Arrays;
 
+@RequiredArgsConstructor
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private LoanRepository loanRepository;
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+    private final LoanRepository loanRepository;
 
     @Override
     public void run(String... args) throws Exception {

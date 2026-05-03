@@ -12,13 +12,14 @@ import com.gestaodebibliotecas.gestaodebibliotecas.mappers.LoanMapper;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.BookRepository;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.LoanRepository;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class LoanService {
 
     private static final String LOAN_NOT_FOUND = "Loan not found";
@@ -26,17 +27,10 @@ public class LoanService {
     private static final String USER_NOT_FOUND = "User not found";
     private static final String BOOK_ALREADY_LOANED = "Book already has an active loan";
 
-    @Autowired
-    private LoanRepository loanRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private LoanMapper loanMapper;
+    private final LoanRepository loanRepository;
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
+    private final LoanMapper loanMapper;
 
     public Page<LoanCreateDTO> findAll(Pageable pageable) {
         return loanRepository.findAll(pageable)

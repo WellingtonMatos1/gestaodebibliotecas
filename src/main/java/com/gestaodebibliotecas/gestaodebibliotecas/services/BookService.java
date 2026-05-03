@@ -1,6 +1,5 @@
 package com.gestaodebibliotecas.gestaodebibliotecas.services;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.OneBasedMonthDeserializer;
 import com.gestaodebibliotecas.gestaodebibliotecas.dto.BookDTO;
 import com.gestaodebibliotecas.gestaodebibliotecas.entities.Book;
 import com.gestaodebibliotecas.gestaodebibliotecas.entities.enums.LoanStatus;
@@ -9,26 +8,22 @@ import com.gestaodebibliotecas.gestaodebibliotecas.exception.ResourceNotFoundExc
 import com.gestaodebibliotecas.gestaodebibliotecas.mappers.BookMapper;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.BookRepository;
 import com.gestaodebibliotecas.gestaodebibliotecas.repositories.LoanRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class BookService {
 
     private static final String BOOK_NOT_FOUND = "Book not found";
     private static final String BOOK_HAS_ACTIVE_LOAN = "Book has an active loan";
 
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private LoanRepository loanRepository;
-
-    @Autowired
-    private BookMapper bookMapper;
+    private final BookRepository bookRepository;
+    private final LoanRepository loanRepository;
+    private final BookMapper bookMapper;
 
     public Page<BookDTO> findAll(Pageable pageable) {
         return bookRepository.findByIsDeletedFalse(pageable)
