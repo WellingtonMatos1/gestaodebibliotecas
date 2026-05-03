@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -53,13 +52,11 @@ public class UserService {
     public UserDTO updateUser(Long id, UserDTO userDTO) {
 
         User existingUser = userRepository.findById(id)
+                .filter(e -> !e.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
-        if(existingUser.isDeleted()) {
-            throw new ResourceNotFoundException(USER_NOT_FOUND);
-        }
         if(userDTO.getEmail() != null) {
-            if(userRepository.existsByEmail(userDTO.getEmail())) {
+            if(userRepository.existsByEmailAndIdNotAndIsDeletedFalse(userDTO.getEmail(), id)) {
                 throw new BusinessException(EMAIL_ALREADY_REGISTERED);
             }
             existingUser.setEmail(userDTO.getEmail());
