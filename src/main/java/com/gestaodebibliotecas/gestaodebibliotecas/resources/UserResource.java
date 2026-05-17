@@ -1,6 +1,8 @@
 package com.gestaodebibliotecas.gestaodebibliotecas.resources;
 
+import com.gestaodebibliotecas.gestaodebibliotecas.dto.BookDTO;
 import com.gestaodebibliotecas.gestaodebibliotecas.dto.UserDTO;
+import com.gestaodebibliotecas.gestaodebibliotecas.services.RecommendationService;
 import com.gestaodebibliotecas.gestaodebibliotecas.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.net.URI;
 public class UserResource {
 
     private final UserService userService;
+    private final RecommendationService recommendationService;
 
     @GetMapping
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
@@ -28,6 +31,11 @@ public class UserResource {
     public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
         UserDTO obj = userService.findById(id);
         return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping(value = "/{id}/recommendations/books")
+    public ResponseEntity<Page<BookDTO>> recommendBooksByUser(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok(recommendationService.recommendBooksByUser(id, pageable));
     }
 
     @PostMapping
